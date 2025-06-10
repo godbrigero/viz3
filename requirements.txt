@@ -1,2 +1,6 @@
 autobahn_client
 ursina
+opencv-python
+numpy
+protobuf
+grpcio-tools

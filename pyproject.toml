@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "viz3"
+version = "0.1.0"
+description = "3D Visualization Tool"
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = [
+    "autobahn_client",
+    "ursina",
+    "opencv-python",
+    "numpy",
+    "protobuf",
+    "grpcio-tools",
+]
+
+[project.scripts]
+viz3 = "viz3.main:main"
+viz3-delta = "viz3.viz3:start"
+
+[tool.setuptools.packages.find]
+where = ["src"]
