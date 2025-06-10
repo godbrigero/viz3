@@ -30,7 +30,7 @@ print(f"Available pipeline topics: {available_topics}")
 
 app = Ursina(
     window_size=(args.window_width, args.window_height),
-    window_title="DeltaV",
+    window_title="viz3",
     window_position=(
         args.window_index * args.window_x_offset,
         args.window_index * args.window_y_offset,

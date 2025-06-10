@@ -19,7 +19,7 @@ dependencies = [
 
 [project.scripts]
 viz3 = "viz3.main:main"
-viz3-delta = "viz3.viz3:start"
+viz3-single = "viz3.viz3:start"
 
 [tool.setuptools.packages.find]
 where = ["src"]
