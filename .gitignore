@@ -7,3 +7,4 @@
 *.pywz
 *.pyzw
 viz3.egg-info/
+build/
