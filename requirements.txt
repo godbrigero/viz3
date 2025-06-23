@@ -1,4 +1,4 @@
-autobahn_client
+autobahn_client==0.1.2
 ursina
 opencv-python
 numpy
