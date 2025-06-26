@@ -9,10 +9,10 @@ class Pipeline:
     the interface for pipeline processing.
     """
 
-    _registry: Dict[str, Type["Pipeline"]] = {}
+    _registry: Dict[str, tuple[Type["Pipeline"], int | list[int] | None]] = {}
 
     @classmethod
-    def get_registry(cls) -> Dict[str, Type["Pipeline"]]:
+    def get_registry(cls) -> Dict[str, tuple[Type["Pipeline"], int | list[int] | None]]:
         """Get the pipeline registry.
 
         Returns:
@@ -21,15 +21,18 @@ class Pipeline:
         return cls._registry
 
     @classmethod
-    def register(cls, topic: str):
+    def register(
+        cls, topic: str, window_number_to_show_in: int | list[int] | None = None
+    ):
         """Decorator to register a pipeline class for a specific topic.
 
         Args:
             topic: The topic name to register the pipeline for
+            window_number_to_show_in: The window number to show the pipeline in, or a list of window numbers to show the pipeline in. Default is None, which means the pipeline will not be shown in all windows.
         """
 
         def decorator(pipeline_class):
-            cls._registry[topic] = pipeline_class
+            cls._registry[topic] = (pipeline_class, window_number_to_show_in)
             return pipeline_class
 
         return decorator

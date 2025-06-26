@@ -10,7 +10,9 @@ from autobahn_client.util import Address
 from viz3.config_parser import parse_args
 from pathlib import Path
 
-args = parse_args()
+args = parse_args(additional_args=["--window-number"])
+
+window_number = args.window_number
 
 plugin_dirs = []
 if args.plugin_directories:
@@ -53,11 +55,26 @@ async def main() -> None:
     pipelines: List[Pipeline] = []
 
     for topic in Pipeline.get_registry():
-        print(topic)
-        pipeline_class = Pipeline.get_registry()[topic]
+        pipeline_class, window_number_to_show_in = Pipeline.get_registry()[topic]
         if pipeline_class:
             pipeline = pipeline_class()
+            if window_number_to_show_in is not None:
+                if isinstance(window_number_to_show_in, int) and int(
+                    window_number
+                ) != int(window_number_to_show_in):
+                    print(
+                        f"Skipping topic {topic} - window number mismatch: {window_number} != {window_number_to_show_in}"
+                    )
+                    continue
+                if (
+                    isinstance(window_number_to_show_in, list)
+                    and int(window_number) not in window_number_to_show_in
+                ):
+                    print(f"Skipping topic {topic} - window number not in list")
+                    continue
+
             pipelines.append(pipeline)
+            print(topic)
 
             async def create_callback(pipeline_instance):
                 async def callback(message: bytes):

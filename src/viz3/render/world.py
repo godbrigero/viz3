@@ -97,6 +97,7 @@ class World:
         light2 = DirectionalLight()
         light2.look_at(Vec3(-1, -1, 1))
         light2.color = (0.7, 0.7, 0.7, 1)
+        print("light2", light2)
 
         light3 = DirectionalLight()
         light3.look_at(Vec3(0, 1, 0))

@@ -48,7 +48,9 @@ class PluginManager:
 
         print(f"Loaded plugin: {file_path.name}")
 
-    def get_available_pipelines(self) -> Dict[str, Type[Pipeline]]:
+    def get_available_pipelines(
+        self,
+    ) -> Dict[str, tuple[Type[Pipeline], int | list[int] | None]]:
         """Get all available pipelines including loaded plugins."""
         return Pipeline.get_registry()
 
