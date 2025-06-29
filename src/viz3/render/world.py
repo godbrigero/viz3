@@ -103,6 +103,22 @@ class World:
         light3.look_at(Vec3(0, 1, 0))
         light3.color = (0.5, 0.5, 0.5, 1)
 
+    def get_axes(self) -> Axes:
+        """Get the axes object.
+
+        Returns:
+            Axes: The axes object
+        """
+        return self.axes
+
+    def get_ground_grid(self) -> GroundGrid:
+        """Get the ground grid object.
+
+        Returns:
+            GroundGrid: The ground grid object
+        """
+        return self.ground_grid
+
     def contains_object(self, name: str) -> bool:
         """Check if an object with the given name exists.
 
