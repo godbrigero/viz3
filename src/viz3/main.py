@@ -20,7 +20,7 @@ def start_window(args, window_index: int = 0):
     cmd = (
         [sys.executable, "-m", "viz3.viz3"]
         + sys.argv[1:]
-        + [f"--window_index={window_index}"]
+        + [f"--window-number={window_index}"]
     )
     process = subprocess.Popen(cmd)
     return process

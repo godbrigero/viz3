@@ -10,7 +10,11 @@ from autobahn_client.util import Address
 from viz3.config_parser import parse_args
 from pathlib import Path
 
-args = parse_args()
+from viz3.util import subscribe_to_multiple_topics
+
+args = parse_args(additional_args=["--window-number"])
+
+window_number = args.window_number
 
 plugin_dirs = []
 if args.plugin_directories:
@@ -42,6 +46,7 @@ world = World()
 
 
 async def main() -> None:
+    global world
     """Main async function that sets up pipelines and runs the application.
 
     This function initializes the Autobahn server, creates pipelines for each
@@ -53,20 +58,59 @@ async def main() -> None:
     pipelines: List[Pipeline] = []
 
     for topic in Pipeline.get_registry():
-        print(topic)
-        pipeline_class = Pipeline.get_registry()[topic]
-        if pipeline_class:
-            pipeline = pipeline_class()
-            pipelines.append(pipeline)
+        pipeline_options = Pipeline.get_registry()[topic]
+        pipeline = pipeline_options.pipeline_type()
+        if pipeline_options.window_number_to_show_in is not None:
+            if isinstance(pipeline_options.window_number_to_show_in, int) and int(
+                window_number
+            ) != int(pipeline_options.window_number_to_show_in):
+                print(
+                    f"Skipping topic {topic} - window number mismatch: {window_number} != {pipeline_options.window_number_to_show_in}"
+                )
+                continue
+            if (
+                isinstance(pipeline_options.window_number_to_show_in, list)
+                and int(window_number) not in pipeline_options.window_number_to_show_in
+            ):
+                print(f"Skipping topic {topic} - window number not in list")
+                continue
 
-            async def create_callback(pipeline_instance):
-                async def callback(message: bytes):
-                    global world
-                    await pipeline_instance.process(world, message)
+        pipelines.append(pipeline)
+        print(f"Loaded pipeline for topic: {topic.get_topics()}")
 
-                return callback
+        async def create_callback(pipeline_instance):
+            async def callback(message: bytes):
+                global world
+                await pipeline_instance.process(world, message)
 
-            await autobahn_server.subscribe(topic, await create_callback(pipeline))
+            return callback
+
+        await subscribe_to_multiple_topics(
+            autobahn_server, topic.get_topics(), await create_callback(pipeline)
+        )
+
+        if (
+            pipeline_options.axes_options is not None
+            and pipeline_options.axes_options.show
+        ):
+            world_axes = world.get_axes()
+            world_axes.set_scale(
+                Vec3(
+                    pipeline_options.axes_options.length,
+                    pipeline_options.axes_options.thickness,
+                    pipeline_options.axes_options.thickness,
+                )
+            )
+
+        if (
+            pipeline_options.plane_options is not None
+            and pipeline_options.plane_options.show
+        ):
+            world_grid = world.get_ground_grid()
+            world_grid.set_size(pipeline_options.plane_options.size)
+            world_grid.set_spacing(pipeline_options.plane_options.spacing)
+            world_grid.set_thickness(pipeline_options.plane_options.thickness)
+            world_grid.set_line_color(pipeline_options.plane_options.line_color)
 
     while True:
         for pipeline in pipelines:

@@ -1,7 +1,7 @@
 import argparse
 
 
-def parse_args():
+def parse_args(additional_args: list[str] = []):
     """Parse command line arguments for the viz3 application.
 
     Returns:
@@ -54,5 +54,9 @@ def parse_args():
         default=["__init__.py"],
         help="Files to exclude from plugin loading",
     )
+
+    if additional_args:
+        for arg in additional_args:
+            parser.add_argument(arg)
 
     return parser.parse_args()

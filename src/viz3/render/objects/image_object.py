@@ -11,7 +11,7 @@ class ImageObject(Entity):
         *,
         position: tuple[float, float, float] = (0, 0, 0),
         scale: float = 1,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(position=position, **kwargs)
 
@@ -45,17 +45,6 @@ class ImageObject(Entity):
         texture = Texture(image)
         texture.filtering = None
         return texture
-
-    def update_image(self, new_image_array: np.ndarray):
-        self.image_array = new_image_array
-
-        # Update aspect ratio with new image
-        height, width = new_image_array.shape[:2]
-        aspect_ratio = width / height
-
-        # Update plane scale
-        self.plane.scale = Vec3(self.scale_value * aspect_ratio, self.scale_value, 1)
-        self.plane.texture = self._create_texture()
 
     def set_position(self, position: tuple[float, float, float]):
         self.position = Vec3(*position)

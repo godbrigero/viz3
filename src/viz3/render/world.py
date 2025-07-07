@@ -74,18 +74,50 @@ class World:
     def _setup_world(self) -> None:
         """Set up the basic world components."""
         # Create ground grid
-        ground = GroundGrid(
+        self.ground = GroundGrid(
             size=30, spacing=1.0, thickness=0.01, line_color=color.light_gray
         )
-        self.add_object("ground", ground)
+        self.add_object("ground", self.ground)
 
         # Create coordinate axes
-        axes = Axes(length=1, thickness=0.02)
-        self.add_object("axes", axes)
+        self.axes = Axes(length=1, thickness=0.02)
+        self.add_object("axes", self.axes)
 
-        # Set up basic lighting
+        # Set up full brightness lighting
+        # Add ambient light for overall illumination
+        ambient = AmbientLight(color=color.white)
+        ambient.color = (0.8, 0.8, 0.8, 1)  # Bright ambient light
+
+        # Add multiple directional lights for full coverage
         sun = DirectionalLight()
         sun.look_at(Vec3(1, -1, -1))
+        sun.color = (1, 1, 1, 1)  # Full white brightness
+
+        # Add additional lights from different angles for even coverage
+        light2 = DirectionalLight()
+        light2.look_at(Vec3(-1, -1, 1))
+        light2.color = (0.7, 0.7, 0.7, 1)
+        print("light2", light2)
+
+        light3 = DirectionalLight()
+        light3.look_at(Vec3(0, 1, 0))
+        light3.color = (0.5, 0.5, 0.5, 1)
+
+    def get_axes(self) -> Axes:
+        """Get the axes object.
+
+        Returns:
+            Axes: The axes object
+        """
+        return self.axes
+
+    def get_ground_grid(self) -> GroundGrid:
+        """Get the ground grid object.
+
+        Returns:
+            GroundGrid: The ground grid object
+        """
+        return self.ground_grid
 
     def contains_object(self, name: str) -> bool:
         """Check if an object with the given name exists.

@@ -4,7 +4,11 @@ import importlib.util
 import random
 import sys
 from typing import Dict, Type
-from viz3.object_pipeline.pipeline import Pipeline
+from viz3.object_pipeline.pipeline import (
+    Pipeline,
+    PipelineOptions,
+    PipelineTopicOptions,
+)
 
 
 @dataclass
@@ -48,10 +52,12 @@ class PluginManager:
 
         print(f"Loaded plugin: {file_path.name}")
 
-    def get_available_pipelines(self) -> Dict[str, Type[Pipeline]]:
+    def get_available_pipelines(
+        self,
+    ) -> Dict[PipelineTopicOptions, PipelineOptions]:
         """Get all available pipelines including loaded plugins."""
         return Pipeline.get_registry()
 
-    def list_topics(self) -> list[str]:
+    def list_topics(self) -> list[PipelineTopicOptions]:
         """List all available pipeline topics."""
         return list(Pipeline.get_registry().keys())
