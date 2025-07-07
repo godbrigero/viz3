@@ -74,14 +74,14 @@ class World:
     def _setup_world(self) -> None:
         """Set up the basic world components."""
         # Create ground grid
-        ground = GroundGrid(
+        self.ground = GroundGrid(
             size=30, spacing=1.0, thickness=0.01, line_color=color.light_gray
         )
-        self.add_object("ground", ground)
+        self.add_object("ground", self.ground)
 
         # Create coordinate axes
-        axes = Axes(length=1, thickness=0.02)
-        self.add_object("axes", axes)
+        self.axes = Axes(length=1, thickness=0.02)
+        self.add_object("axes", self.axes)
 
         # Set up full brightness lighting
         # Add ambient light for overall illumination

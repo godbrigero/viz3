@@ -4,52 +4,44 @@ import numpy as np
 
 
 class Axes(Entity):
-    def __init__(self, length: float = 1, thickness: float = 0.02, **kwargs):
+    def __init__(self, scale: Vec3 = Vec3(1, 1, 1), thickness: float = 0.02, **kwargs):
         super().__init__(**kwargs)
-        self.length = length
-        self.thickness = thickness
+        self.scale = scale
 
         # X axis
         self.x_axis = Entity(
             parent=self,
             model="cube",
             color=color.red,
-            scale=(length, thickness, thickness),
-            position=(length / 2, 0, 0),
+            scale=(1, thickness, thickness),
+            position=(0.5, 0, 0),
         )
         # Y axis
         self.y_axis = Entity(
             parent=self,
             model="cube",
             color=color.green,
-            scale=(thickness, length, thickness),
-            position=(0, length / 2, 0),
+            scale=(thickness, 1, thickness),
+            position=(0, 0.5, 0),
         )
         # Z axis
         self.z_axis = Entity(
             parent=self,
             model="cube",
             color=color.blue,
-            scale=(thickness, thickness, length),
-            position=(0, 0, length / 2),
+            scale=(thickness, thickness, 1),
+            position=(0, 0, 0.5),
         )
 
-    def set_color(self, color: Color):
-        self.x_axis.color = color
-        self.y_axis.color = color
-        self.z_axis.color = color
+        self.set_scale(scale)
 
-    def set_length(self, length: float):
-        self.length = length
-        self.x_axis.scale = (length, self.thickness, self.thickness)
-        self.y_axis.scale = (self.thickness, length, self.thickness)
-        self.z_axis.scale = (self.thickness, self.thickness, length)
+    def set_scale(self, scale: Vec3):
+        self.scale = scale
 
     def set_thickness(self, thickness: float):
-        self.thickness = thickness
-        self.x_axis.scale = (self.length, thickness, thickness)
-        self.y_axis.scale = (thickness, self.length, thickness)
-        self.z_axis.scale = (thickness, thickness, self.length)
+        self.x_axis.scale = (self.x_axis.scale.x, thickness, thickness)
+        self.y_axis.scale = (thickness, self.y_axis.scale.y, thickness)
+        self.z_axis.scale = (thickness, thickness, self.z_axis.scale.z)
 
     def set_position(self, position: Vec3):
         self.position = position
@@ -115,7 +107,7 @@ class Axes(Entity):
             z = 0.25 * s
 
         # Set the rotation using quaternion
-        self.rotation = Vec4(x, y, z, w)
+        self.quaternion = Vec4(x, y, z, w)
 
     def set_all_entity_attr(self, attr_name: str, value: Any):
         setattr(self.x_axis, attr_name, value)
