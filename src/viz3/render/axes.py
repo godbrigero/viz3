@@ -4,9 +4,9 @@ import numpy as np
 
 
 class Axes(Entity):
-    def __init__(self, scale: Vec3 = Vec3(1, 1, 1), thickness: float = 0.02, **kwargs):
+    def __init__(self, thickness: float = 0.02, **kwargs):
         super().__init__(**kwargs)
-        self.scale = scale
+        self.scale = Vec3(1, 1, 1)
 
         # X axis
         self.x_axis = Entity(
@@ -32,8 +32,6 @@ class Axes(Entity):
             scale=(thickness, thickness, 1),
             position=(0, 0, 0.5),
         )
-
-        self.set_scale(scale)
 
     def set_scale(self, scale: Vec3):
         self.scale = scale

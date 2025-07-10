@@ -94,11 +94,12 @@ async def main() -> None:
             and pipeline_options.axes_options.show
         ):
             world_axes = world.get_axes()
+            world_axes.set_thickness(pipeline_options.axes_options.thickness)
             world_axes.set_scale(
                 Vec3(
                     pipeline_options.axes_options.length,
-                    pipeline_options.axes_options.thickness,
-                    pipeline_options.axes_options.thickness,
+                    pipeline_options.axes_options.length,
+                    pipeline_options.axes_options.length,
                 )
             )
 
