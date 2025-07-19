@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from enum import Enum
 from viz3.render.world import World
 from typing import Dict, Type
 from ursina import color
@@ -24,8 +25,35 @@ class PlaneOptions:
 class PipelineOptions:
     pipeline_type: Type["Pipeline"]
     window_number_to_show_in: int | list[int] | None = None
-    axes_options: AxesOptions | None = AxesOptions()
-    plane_options: PlaneOptions | None = PlaneOptions()
+
+
+class PointOfView(Enum):
+    FIRST_PERSON = "first_person"
+    THIRD_PERSON = "third_person"
+
+
+@dataclass
+class PipelineGlobalConfig:
+    _registry: "PipelineGlobalConfig | None" = None
+
+    axes_options: AxesOptions = AxesOptions()
+    plane_options: PlaneOptions = PlaneOptions()
+    point_of_view_options: PointOfView = PointOfView.THIRD_PERSON
+
+    @classmethod
+    def register(cls):
+        def decorator(pipeline_class):
+            cls._registry = pipeline_class
+            return pipeline_class
+
+        return decorator
+
+    @classmethod
+    def get_registry(cls) -> "PipelineGlobalConfig":
+        if cls._registry is None:
+            return PipelineGlobalConfig()
+
+        return cls._registry
 
 
 @dataclass
@@ -77,8 +105,6 @@ class Pipeline:
         cls,
         topic: str | list[str],
         window_number_to_show_in: int | list[int] | None = None,
-        axes_options: AxesOptions | None = None,
-        plane_options: PlaneOptions | None = None,
     ):
         """Decorator to register a pipeline class for a specific topic.
 
@@ -91,8 +117,6 @@ class Pipeline:
             cls._registry[PipelineTopicOptions(topic)] = PipelineOptions(
                 pipeline_type=pipeline_class,
                 window_number_to_show_in=window_number_to_show_in,
-                axes_options=axes_options,
-                plane_options=plane_options,
             )
 
             return pipeline_class

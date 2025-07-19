@@ -58,6 +58,9 @@ class ImageObject(Entity):
 
         self.plane.scale = Vec3(scale * aspect_ratio, scale, 1)
 
+    def set_world_image_scale(self, width: float, height: float):
+        self.plane.scale = Vec3(width, height, 1)
+
     def update_texture(self, new_image_array: np.ndarray):
         self.image_array = new_image_array
         height, width = new_image_array.shape[:2]

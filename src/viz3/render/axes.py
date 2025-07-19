@@ -33,6 +33,9 @@ class Axes(Entity):
             position=(0, 0, 0.5),
         )
 
+    def set_enabled(self, enabled: bool):
+        self.enabled = enabled
+
     def set_scale(self, scale: Vec3):
         self.scale = scale
 

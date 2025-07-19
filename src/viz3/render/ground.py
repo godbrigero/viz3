@@ -23,6 +23,9 @@ class GroundGrid(Entity):
         # Build initial mesh
         self._build_mesh()
 
+    def set_enabled(self, enabled: bool):
+        self.enabled = enabled
+
     def _build_mesh(self):
         verts = []
         lines = []

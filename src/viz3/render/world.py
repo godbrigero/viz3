@@ -63,21 +63,25 @@ class World:
         self.ground_grid: Optional[GroundGrid] = None
         self.axes: Optional[Axes] = None
 
-        # Set up camera
-        self.camera = EditorCamera(move_speed=0.5)
-        self.camera.rotation = (90, 0, 0)
-
         if add_base_objects:
             # Initialize default world components
             self._setup_world()
 
+    def set_camera(self, camera: Entity) -> None:
+        """Set the camera.
+
+        Args:
+            camera: The camera to set
+        """
+        self.camera = camera
+
     def _setup_world(self) -> None:
         """Set up the basic world components."""
         # Create ground grid
-        self.ground = GroundGrid(
+        self.ground_grid = GroundGrid(
             size=30, spacing=1.0, thickness=0.01, line_color=color.light_gray
         )
-        self.add_object("ground", self.ground)
+        self.add_object("ground_grid", self.ground_grid)
 
         # Create coordinate axes
         self.axes = Axes(length=1, thickness=0.02)
@@ -102,6 +106,22 @@ class World:
         light3 = DirectionalLight()
         light3.look_at(Vec3(0, 1, 0))
         light3.color = (0.5, 0.5, 0.5, 1)
+
+    def set_camera_position(self, position: Vec3) -> None:
+        """Set the camera position.
+
+        Args:
+            position: The position to set the camera to
+        """
+        self.camera.position = position
+
+    def set_camera_rotation(self, rotation: Vec3) -> None:
+        """Set the camera rotation.
+
+        Args:
+            rotation: The rotation to set the camera to
+        """
+        self.camera.rotation = rotation
 
     def get_axes(self) -> Axes:
         """Get the axes object.
